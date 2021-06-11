@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Documentation</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Nav section -->
+    <nav>
+        <header class="navHeader">
+            <h1>SQL Documentation</h1>
+        </header>
+        <ul>
+            <li><a class="navLinks" href="#intro">SQL Introduction</a></li>
+            <li><a class="navLinks" href="#tables">CREATE, DROP, or ALTER Tables</a></li>
+            <li><a class="navLinks" href="#constraints">CONSTRAINTS</a></li>
+            <li><a class="navLinks" href="#null">NULL vs. NOT NULL</a></li>
+            <li><a class="navLinks" href="#keys">Primary Key vs. Foreign Key</a></li>
+            <li><a class="navLinks" href="#check">CHECK</a></li>
+            <li><a class="navLinks" href="#select">SELECT</a></li>
+            <li><a class="navLinks" href="#where">WHERE</a></li>
+            <li><a class="navLinks" href="#operators">AND, OR, NOT</a></li>
+            <li><a class="navLinks" href="#order">ORDER BY</a></li>
+            <li><a class="navLinks" href="#group">GROUP BY</a></li>
+            <li><a class="navLinks" href="#having">HAVING</a></li>
+            <li><a class="navLinks" href="#insert">INSERT INTO</a></li>
+            <li><a class="navLinks" href="#update">UPDATE</a></li>
+            <li><a class="navLinks" href="#delete">DELETE</a></li>
+            <li><a class="navLinks" href="#functions">FUNCTIONS</a></li>
+            <li><a class="navLinks" href="#wildcards">WILDCARDS</a></li>
+            <li><a class="navLinks" href="#in-between">IN and BETWEEN</a></li>
+            <li><a class="navLinks" href="#joins">JOINS and UNION</a></li>
+            <li><a class="navLinks" href="#index">INDEX</a></li>
+            <li><a class="navLinks" href="#views">VIEWS</a></li>
+            <li><a class="navLinks" href="#procedures">STORED PROCEDURES</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Information -->
+    <main class="main-info">
+        <!-- INTRODUCTION section -->
+        <section id="intro">
+            <h1>SQL Introduction</h1>
+            <p>Data is everywhere. It is necessary to store data about people, items, animals, or many other things. Databases are
+                commonly used for this task, and SQL is like the language of databases.
+                <br>
+                <br>
+                SQL stands for Structured Query Language. With it, you can access and manipulate databases in which you are 
+                storing important data. SQL is used for relational databases, meaning the data is stored structurally using
+                rows and columns that allows you to see the 'relation' between each table. SQL is a powerful language that allows
+                you to execute queries against a database to retrieve, add or update, or delete information.
+                <br>
+                <br>
+                <span class="note">NOTE: Each section in this documentation will include examples of how to use each SQL command. Different SQL database
+                softwares write queries slightly differently, so this documentation will prioritize how SQL Server queries look.</span>
+            </p>
+        </section>
+
+        <!-- CREATE, DROP, OR ALTER TABLES section -->
+        <section id="tables">
+            <h1>CREATE, DROP, or ALTER Tables</h1>
+            <p>
+                The <span>CREATE TABLE</span> statement creates a new table in a database. The parameters included in the statement
+                can specify the name of the column and the datatype with any constraints.
+            </p>
+            <code>
+    <span>CREATE TABLE</span> Car {
+        Model varchar(255),
+        Year int,
+        Miles int,
+        LicensePlate varchar(8)
+    };
+            </code>
+            <p>
+                The <span>DROP TABLE</span> statement drops an existing table from a database. This results in the loss of ALL
+                information stored in that table.
+            </p>
+            <code>
+    <span>DROP TABLE</span> Car;
+            </code>
+            <p>
+                The <span>ALTER TABLE</span> statement is used to add, delete, or modify columns in a table. You can also add constraints
+                that were not added when the table was first created.
+            </p>
+            <code>
+    <span>ALTER TABLE</span> Car
+    ADD Mileage int;
+    -----------------------------------
+    <span>ALTER TABLE</span> Car
+    DROP COLUMN Mileage;
+            </code>
+        </section>
+
+        <!-- CONSTRAINTS section -->
+        <section id="constraints">
+            <h1>CONSTRAINTS</h1>
+            <p>
+                Constraints specify rules for data in a table; it is added when you CREATE TABLE or ALTER TABLE.
+            </p>
+            <code>
+    CREATE TABLE Car {
+        Model varchar(255) <span>PRIMARY KEY</span>,
+        Year int,
+        Miles int,
+        LicensePlate varchar(8) <span>NOT NULL</span>
+    };
+            </code>
+        </section>
+
+        <!-- NULL vs. NOT NULL section -->
+        <section id="null">
+            <h1>NULL vs. NOT NULL</h1>
+            <p>
+                <span>NULL</span> is the default constraint placed on a column, simply meaning that the column can accept no values and
+                there would not be any issues.
+                <br>
+                <br>
+                If <span>NOT NULL</span> is added as a constraint, a value MUST be inputted in that column to be able to insert a record.
+            </p>
+            <code>
+    CREATE TABLE Car {
+        Model varchar(255) <span>NOT NULL</span>,
+        Year int,
+        Miles int,
+        LicensePlate varchar(8) <span>NOT NULL</span>
+    };
+            </code>
+        </section>
+
+        <!-- Primary Key vs. Foreign Key section -->
+        <section id="keys">
+            <h1>Primary Key vs. Foreign Key</h1>
+            <p>
+                <span>PRIMARY KEY</span> is a constraint that uniquely identifies records. Primary keys are NOT NULL and must have
+                unique values. There can only be one primary key in a table, but it can contain multiple columns.
+            </p>
+            <code>
+    CREATE TABLE Car {
+        Model varchar(255) NOT NULL <span>PRIMARY KEY</span>,
+        Year int,
+        Miles int,
+        LicensePlate varchar(8)
+    };
+    -----------------------------------
+    CREATE TABLE Car {
+        Model varchar(255) NOT NULL,
+        Year int,
+        Miles int,
+        LicensePlate varchar(8) NOT NULL,
+        <span>CONSTRAINT PK_Cars PRIMARY KEY (Model, LicensePlate)</span>
+    }
+            </code>
+            <p>
+                <span>FOREIGN KEY</span> is a constraint that refers to the PRIMARY KEY of another table, strengthening the links
+                between two tables. In a way, the table with the primary key can be seen as the parent of the table with the foreign key.
+            </p>
+            <code>
+    CREATE TABLE Purchases {
+        PurchaseID varchar(30) NOT NULL PRIMARY KEY,
+        PurchaseNum int NOT NULL,
+        Model varchar(255) <span>FOREIGN KEY REFERENCES</span> Car(Model)
+    };
+            </code>
+        </section>
+
+        <!-- CHECK section -->
+        <section id="check">
+            <h1>CHECK</h1>
+            <p>
+                The <span>CHECK</span> constraint limits the value range that can be inputted on a column. If a record being added does
+                not meet the check, it will not be placed into the table.
+            </p>
+            <code>
+    CREATE TABLE Car {
+        Model varchar(255),
+        Year int <span>CHECK (Year >= 1970)</span>,
+        Miles int,
+        LicensePlate varchar(8)
+    };
+    -----------------------------------
+    CREATE TABLE Car {
+        Model varchar(255),
+        Year int,
+        Miles int,
+        LicensePlate varchar(8),
+        <span>CONSTRAINT CHECK_YEAR CHECK (Year >= 1970 AND Miles <= 300000)</span>
+    };
+            </code>
+        </section>
+
+    <!-- SELECT section -->
+        <section id="select">
+            <h1>SELECT</h1>
+            <p>
+                <span>SELECT</span> statement is used to selectively retrieve data from a database.
+            </p>
+            <code>
+    <span>SELECT</span> * FROM Car; --> retrieves ALL the data from the table
+    -----------------------------------
+    <span>SELECT</span> Model, Year
+    FROM Car
+    WHERE Year >= 2005;
+            </code>
+        </section>
+
+        <!-- WHERE section -->
+        <section id="where">
+            <h1>WHERE</h1>
+            <p>
+                Using the <span>WHERE</span> clause is useful for filtering records according to certain conditions.
+            </p>
+            <code>
+    SELECT Model, Year
+    FROM Car
+    <span>WHERE</span> Model='Toyota';
+            </code>
+        </section>
+
+        <!-- AND, OR, NOT section -->
+        <section id="operators">
+            <h1>AND, OR, NOT</h1>
+            <p>
+                The <span>AND, OR, NOT</span> operators are used in conjunction with the WHERE clause to filter records more precisely.
+            </p>
+            <code>
+    SELECT Model, Year
+    FROM Car
+    WHERE Model='Toyota' <span>AND</span> Year=1995;
+    -----------------------------------
+    SELECT Model, Year
+    FROM Car
+    WHERE Model='Toyota' <span>OR</span> Model='Honda';
+    -----------------------------------
+    SELECT Model, Year
+    FROM Car
+    WHERE <span>NOT</span> Model='Audi';
+            </code>
+        </section>
+
+        <!-- ORDER BY section -->
+        <section id="order">
+            <h1>ORDER BY</h1>
+            <p>
+                <span>ORDER BY</span> sorts the data by ascending or descending order. Unless stated otherwise, by default ORDER BY sorts
+                in ascending order.
+            </p>
+            <code>
+    SELECT * FROM Car
+    <span>ORDER BY</span> Model <span>DESC</span>;
+            </code>
+        </section>
+
+        <!-- GROUP BY section -->
+        <section id="group">
+            <h1>GROUP BY</h1>
+            <p>
+                <span>GROUP BY</span> groups rows that have the same values into summary rows. The following example shows a query that returns
+                the average ileage grouped by car models.
+            </p>
+            <code>
+    SELECT AVG(Miles)
+    FROM Car
+    <span>GROUP BY</span> Model;
+            </code>
+        </section>
+
+        <!-- HAVING section -->
+        <section id="having">
+            <h1>HAVING</h1>
+            <p>
+                The <span>HAVING</span> clause is used similarly to the WHERE clause except that it can be used on aggregate functions that make calculations. The
+                following example is a query that returns the number of cars grouped by model with less than 100k miles.
+            </p>
+            <code>
+    SELECT COUNT(Model)
+    FROM Car
+    GROUP BY Model
+    <span>HAVING</span> AVG(Miles) < 100000;
+            </code>
+        </section>
+
+        <!-- INSERT INTO section -->
+        <section id="insert">
+            <h1>INSERT INTO</h1>
+            <p>
+                <span>INSERT INTO</span> is the statement that allows us to insert new records into a table.
+            </p>
+            <code>
+    <span>INSERT INTO</span> Car (Model, Year, Miles, LicensePlate)
+    <span>VALUES</span> ('Toyota', '2009', '164000', 'A1234567');
+            </code>
+        </section>
+
+        <!-- UPDATE section -->
+        <section id="update">
+            <h1>UPDATE</h1>
+            <p>
+                <span>UPDATE</span> is used to modify existing records in a table. The WHERE statement is used here to specify
+                exactly which information to update.
+            </p>
+            <code>
+    <span>UPDATE</span> Car
+    SET Model='Honda', Year='2017', Miles='40000'
+    WHERE LicensePlate='A1234567';
+            </code>
+        </section>
+
+        <!-- DELETE section -->
+        <section id="delete">
+            <h1>DELETE</h1>
+            <p>
+                <span>DELETE</span> simply deletes existing records in a table.
+            </p>
+            <code>
+    <span>DELETE</span> FROM Car WHERE LicensePlate='BA469403'
+            </code>
+        </section>
+
+        <!-- FUNCTIONS section -->
+        <section id="functions">
+            <h1>FUNCTIONS</h1>
+            <p>
+                There are a few aggregate functions that are very powerful for retrieving data in SQL. When executing this query, it is good practice
+                to use the <span>AS</span> statement to give a column name to the data that you are retrieving.
+                <br>
+                <br>
+                The <span>MIN()</span> function returns the smallest value of a column, and the <span>MAX()</span> function
+                returns the largest value of a column.
+            </p>
+            <code>
+    SELECT <span>MIN(Year) AS</span> OldestCar
+    FROM Car;
+            </code>
+
+            <p>
+                <span>COUNT()</span> returns the number of rows that match a condition.
+            </p>
+            <code>
+    SELECT <span>COUNT(Model)</span>
+    FROM Car
+    WHERE Year>=2005;
+            </code>
+
+            <p>
+                <span>AVG()</span> simply returns the average of a numeric column.
+            </p>
+            <code>
+    SELECT <span>AVG(Year)</span>
+    FROM Car
+    WHERE Miles<=100000;
+            </code>
+
+            <p>
+                <span>SUM()</span> returns the sum of a numeric column.
+            </p>
+            <code>
+    SELECT <span>SUM(Miles)</span>
+    FROM Car;
+            </code>
+        </section>
+
+        <!-- WILDCARDS section -->
+        <section id="wildcards">
+            <h1>WILDCARDS</h1>
+            <p>
+                <span>WILDCARDS</span> are used to substitute one or more characters in a string. They are used in conjunction with the
+                <span>LIKE</span> operator, which is used in a WHERE clause.
+                <br>
+                <br>
+                Two popular wildcards used are: <br>
+                1) The percent sign (%) which represents zero, one, or multiple characters. <br>
+                2) The underscore sign (_) which represents a single character.
+                <br>
+                <br>
+                The following SQL statement finds all car models containing "da".
+            </p>
+            <code>
+    SELECT * FROM Car
+    WHERE Model <span>LIKE '%da%'</span>;
+            </code>
+        </section>
+
+        <!-- IN and BETWEEN section-->
+        <section id="in-between">
+            <h1>IN and BETWEEN</h1>
+            <p>
+                The <span>IN</span> operator, which is used in a WHERE clause, is basically a shorthand for the OR operator.
+            </p>
+            <code>
+    SELECT * FROM Car
+    WHERE Year <span>IN ('1975', '2000', '2020')</span>;
+            </code>
+
+            <p>
+                The <span>BETWEEN</span> operator selects values within the specified range.
+            </p>
+            <code>
+    SELECT * FROM Car
+    WHERE Year <span>BETWEEN 2000 AND 2020</span>;
+            </code>
+        </section>
+
+        <!-- JOINS and UNIONS section -->
+        <section id="joins">
+            <h1>JOINS and UNIONS</h1>
+            <p>
+                The different <span>JOIN</span> clauses are used to combine rows from different tables based on a related column.
+                <br>
+                <br>
+                There are 4 main join clauses: <br>
+                1) <span>INNER JOIN</span>: returns only the matching values in both tables. <br>
+                2) <span>LEFT JOIN</span>: returns all the records from the left table plus the matching values from the right table. <br>
+                3) <span>RIGHT JOIN</span>: returns all the records from the right table plus the matching values from the left table. <br>
+                4) <span>FULL OUTER JOIN</span>: returns all the records when there is a match in either table. <br>
+            </p>
+            <img src="/img/u4rx9tnq7ei4fstlafec.png" alt="SQL Joins image explanation">
+            <code>
+    SELECT Car.LicensePlate, Purchases.PurchaseID
+    FROM Car
+    <span>INNER JOIN</span> Purchases <span>ON</span> Car.Model = Purchases.Model; 
+            </code>
+        </section>
+
+        <!-- INDEX section -->
+        <section id="index">
+            <h1>INDEX</h1>
+            <p>
+                An <span>INDEX</span> is used to speed up searches and queries against columns that are frequently searched.
+            </p>
+            <code>
+    <span>CREATE INDEX</span> idx_car
+    ON Car (Model, Year);
+            </code>
+        </section>
+
+        <!-- VIEWS section -->
+        <section id="views">
+            <h1>VIEWS</h1>
+            <p>
+                <span>VIEWS</span> are used to obtain a virtual table composed of fields from real tables in the database.
+            </p>
+            <code>
+    <span>CREATE VIEW</span> vw_CarInfo AS
+    SELECT Model, Year, Miles
+    FROM Car
+    WHERE Miles > 750000;
+            </code>
+        </section>
+
+        <!-- STORED PROCEDURES section -->
+        <section id="procedures">
+            <h1>STORED PROCEDURES</h1>
+            <p>
+                <span>STORED PROCEDURES</span> are SQL queries that you can save and reuse again. This way, if you have queries that are used
+                often, you can store it in a stored procedure to be used quickly later on.
+            </p>
+            <code>
+    <span>CREATE PROCEDURE</span> Cars_Under_10K_Miles
+    AS
+    SELECT * From Car
+    WHERE Miles < 10000
+    GO;
+    -----------------------------------
+    EXEC Cars_Under_10K_Miles;
+            </code>
+        </section>
+    </main>
+</body>
+</html>
